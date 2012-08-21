@@ -52,9 +52,9 @@ class backup_user_preferences_block_structure_step extends backup_block_structur
         $learner_knowledges->add_child($learner_knowledge);
  
         // Define sources
-        $learnermeta_definition->set_source_table("ilms_learnermeta_definitions", array());
-        $learnermeta->set_source_table("ilms_learnermeta", array("definitionid" => backup::VAR_PARENTID));
-        $learner_knowledge->set_source_table("ilms_learner_knowledge", array("courseid" => backup::VAR_COURSEID));
+        $learnermeta_definition->set_source_table("block_user_preferences_learnermeta_definitions", array());
+        $learnermeta->set_source_table("block_user_preferences_learnermeta", array("definitionid" => backup::VAR_PARENTID));
+        $learner_knowledge->set_source_table("block_user_preferences_learner_knowledge", array("courseid" => backup::VAR_COURSEID));
         
  
         // Define id annotations

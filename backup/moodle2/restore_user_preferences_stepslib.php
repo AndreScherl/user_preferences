@@ -52,8 +52,8 @@ class restore_user_preferences_block_structure_step extends restore_structure_st
     	$data = (object)$data;
     	$oldid = $data->id;
     	
-    	if(!$DB->record_exists("ilms_learnermeta_definitions", array("attribute" => $data->attribute))){
-    		$newitemid = $DB->insert_record("ilms_learnermeta_definitions", $data);
+    	if(!$DB->record_exists("block_user_preferences_learnermeta_definitions", array("attribute" => $data->attribute))){
+    		$newitemid = $DB->insert_record("block_user_preferences_learnermeta_definitions", $data);
     	} else {
     		$newitemid = $oldid;
     	}
@@ -73,8 +73,8 @@ class restore_user_preferences_block_structure_step extends restore_structure_st
     	$data->userid = $this->get_mappingid("user", $olduserid);
     	$data->definitionid = $this->get_mappingid("learnermeta_definition", $olddefinitionid);
     	
-    	if(!$DB->record_exists("ilms_learnermeta", array("userid" => $data->userid, "definitionid" => $data->definitionid))){
-    		$newitemid = $DB->insert_record("ilms_learnermeta", $data);
+    	if(!$DB->record_exists("block_user_preferences_learnermeta", array("userid" => $data->userid, "definitionid" => $data->definitionid))){
+    		$newitemid = $DB->insert_record("block_user_preferences_learnermeta", $data);
     	}
     }
     
@@ -87,7 +87,7 @@ class restore_user_preferences_block_structure_step extends restore_structure_st
     	$data->courseid = $this->get_courseid();
     	$data->userid = $this->get_mappingid("user", $data->userid);
     	
-    	$newitemid = $DB->insert_record("ilms_learner_knowledge", $data);
+    	$newitemid = $DB->insert_record("block_user_preferences_learner_knowledge", $data);
     }
         
     protected function after_execute() {

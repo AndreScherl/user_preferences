@@ -40,23 +40,23 @@ class block_user_preferences extends block_base {
         if(has_capability('block/user_preferences:edit', $context, $USER->id)) {
             require_once($CFG->dirroot.'/blocks/case_repository/dmllib2.php'); // resolve bug MDL-10787 in next SQL statement
             require_once($CFG->dirroot.'/blocks/user_preferences/lib.php');
-            $sql = "SELECT DISTINCT d.attributegroup FROM {ilms_learnermeta_definitions} d";
+            $sql = "SELECT DISTINCT d.attributegroup FROM {block_user_preferences_learnermeta_definitions} d";
             if($groups = $DB->get_records_sql($sql)) {
                 foreach($groups as $g) {
                     $sql = "SELECT * \n". 
                            "FROM \n".
                            "  (SELECT l.definitionid, l.subtype, SUM(l.appliance*l.value)/SUM(l.appliance) AS mean_value  \n".
-                           "   FROM {ilms_learnermeta} l   \n".
+                           "   FROM {block_user_preferences_learnermeta} l   \n".
                            "   WHERE userid = $USER->id \n".
                            "   GROUP BY l.subtype, l.definitionid\n" .
                            "   UNION ALL\n".
                            "   SELECT d2.id as definitionid, NULL as subtype, SUM(k.appliance*k.value)/SUM(k.appliance) AS mean_value\n".
-                           "   FROM {ilms_learner_knowledge} k\n".
-                           "   INNER JOIN {ilms_learnermeta_definitions} d2 ON d2.attribute = 'difficulty'\n".
+                           "   FROM {block_user_preferences_learner_knowledge} k\n".
+                           "   INNER JOIN {block_user_preferences_learnermeta_definitions} d2 ON d2.attribute = 'difficulty'\n".
                            "   WHERE userid = $USER->id AND courseid = $course_id\n".
                            "   GROUP BY d2.id\n".
                            "  ) l2 \n".
-                           "  INNER JOIN {ilms_learnermeta_definitions} d ON l2.definitionid = d.id  \n".
+                           "  INNER JOIN {block_user_preferences_learnermeta_definitions} d ON l2.definitionid = d.id  \n".
                            "WHERE d.attributegroup = '$g->attributegroup'  \n".
                            "ORDER BY d.attributegroup, d.attribute, l2.subtype";
                     if(!$meta = get_records_sql_by_field($sql)) {

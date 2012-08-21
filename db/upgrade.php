@@ -1,7 +1,7 @@
 <?php  
 /*
  * Copyright (C) 2007, Gert Sauerstein
- * Edited by Andre Scherl, 17.09.2012
+ * Edited by Andre Scherl, 21.08.2012
  * You should have received a copy of the GNU General Public License
  * along with DASIS.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,7 +31,7 @@ function xmldb_block_user_preferences_upgrade($oldversion=0) {
     
     $dbman = $DB->get_manager(); // loads ddl manager and xmldb classes
     
-    // Version 2007110400: Spalte "timemodified" in der Tabelle "ilms_learnermeta" hinzugefügt
+    // Version 2007110400: Spalte "timemodified" in der Tabelle "block_user_preferences_learnermeta" hinzugefügt
     // Version 2007110500: Umstellung des "kursspezifischen Wissens" der Lerner auf eine eigene Tabelle
     // -> pro Kurs wird zukünftig ein Datensatz erfasst
     // (AS) ich habe beide upgrades in eines gepackt...
@@ -53,7 +53,15 @@ function xmldb_block_user_preferences_upgrade($oldversion=0) {
         $table->add_key("courseid", XMLDB_KEY_FOREIGN, array("courseid"), "course", array("id"));
         $dbman->create_table($table);
         
-        upgrade_mod_savepoint(true, 20011012500, 'block_user_preferences');
+        upgrade_block_savepoint(true, 2011012500, 'user_preferences');
+    }
+    
+    if ($oldversion < 2012082100) {
+    	$dbman->rename_table("ilms_learnermeta_definitions", "block_user_preferences_learnermeta_definitions", $continue=true, $feedback=true);
+    	$dbman->rename_table("ilms_learnermeta", "block_user_preferences_learnermeta", $continue=true, $feedback=true);
+    	$dbman->rename_table("ilms_learner_knowledge", "block_user_preferences_learner_knowledge", $continue=true, $feedback=true);
+    	
+    	upgrade_block_savepoint(true, 2012082100, 'user_preferences');
     }
 }
 
