@@ -63,6 +63,8 @@ function xmldb_block_user_preferences_upgrade($oldversion=0) {
     	
     	upgrade_block_savepoint(true, 2012082100, 'user_preferences');
     }
+    
+    return true;
 }
 
 ?>
