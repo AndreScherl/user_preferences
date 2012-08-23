@@ -57,6 +57,7 @@ function create_definitions($DB) {
         );
         $default_definitions['age']->type = 'number';
         
+        /*
         $default_definitions['linguistic_requirement']->tracking = 1;
         $default_definitions['logical_requirement']->tracking = 1;
         $default_definitions['social_requirement']->tracking = 1;
@@ -66,7 +67,18 @@ function create_definitions($DB) {
         $default_definitions['learningstyle_input']->tracking = 1;
         $default_definitions['difficulty']->tracking = 1;
         $default_definitions['learningstyle_processing']->tracking = 1;
-          $default_definitions['experience']->tracking = 1;
+        $default_definitions['experience']->tracking = 1;
+        */
+        $default_definitions['linguistic_requirement']->tracking = 0;
+        $default_definitions['logical_requirement']->tracking = 0;
+        $default_definitions['social_requirement']->tracking = 0;
+        $default_definitions['learningstyle_perception']->tracking = 0;
+        $default_definitions['learningstyle_organization']->tracking = 0;
+        $default_definitions['learningstyle_perspective']->tracking = 0;
+        $default_definitions['learningstyle_input']->tracking = 0;
+        $default_definitions['difficulty']->tracking = 0;
+        $default_definitions['learningstyle_processing']->tracking = 0;
+        $default_definitions['experience']->tracking = 0;
         
         $default_definitions['spoken_language']->attributegroup = 'knowledge';
         $default_definitions['reading']->attributegroup = 'knowledge';
