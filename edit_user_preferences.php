@@ -51,17 +51,17 @@
     if (!$user = $DB->get_record('user', array('id' => $user_id))) {
         error(get_string('error_invalid_user', $BLOCK_NAME), $THIS_PAGE);
     }
-    $sql = "SELECT * FROM {block_user_preferences_learnermeta_definitions} WHERE id = $attr_type";
+    $sql = "SELECT * FROM {ilms_learnermeta_definitions} WHERE id = $attr_type";
     if($attr_type != null && !($attr_def = $DB->get_record_sql($sql))) {
     	error("Operation failed: There is no attribut definition for <code>$attr_type</code>");
     }
-    if($operation === 'add' && (!$DB->get_record_sql("SELECT * FROM {block_user_preferences_learnermeta_definitions} WHERE id = ".$attr_type) || empty($attr_subtype) || empty($attr_value))) {
+    if($operation === 'add' && (!$DB->get_record_sql("SELECT * FROM {ilms_learnermeta_definitions} WHERE id = ".$attr_type) || empty($attr_subtype) || empty($attr_value))) {
         error("ADD operation failed: attribut type $attr_type , subtype &quot;$attr_subtype&quot; or value $attr_value is not defined", $THIS_PAGE_WITH_USER);
     }
-    if($operation === 'set' && !$DB->get_record_sql("SELECT * FROM {block_user_preferences_learnermeta_definitions} WHERE id = ".$attr_type)) {
+    if($operation === 'set' && !$DB->get_record_sql("SELECT * FROM {ilms_learnermeta_definitions} WHERE id = ".$attr_type)) {
         error("SET operation failed: Attribute of type $attr_type and subtype &quot;$attr_subtype&quot; does not exist", $THIS_PAGE_WITH_USER);
     }
-    if($operation === 'delete' && (!$DB->get_record_sql("SELECT * FROM {block_user_preferences_learnermeta_definitions} WHERE id = ".$attr_type) || empty($attr_subtype))) {
+    if($operation === 'delete' && (!$DB->get_record_sql("SELECT * FROM {ilms_learnermeta_definitions} WHERE id = ".$attr_type) || empty($attr_subtype))) {
         error("DELETE operation failed: Attribute $attr_type with subtype &quot;$attr_subtype&quot; does not exist", $THIS_PAGE_WITH_USER);
     }
   	
@@ -101,7 +101,7 @@
     	$dataObject->appliance = "1.0";
     	$dataObject->timemodified = time();
 
-        if(!$DB->insert_record('block_user_preferences_learnermeta', $dataObject)) {
+        if(!$DB->insert_record('ilms_learnermeta', $dataObject)) {
     		error(get_string('error_invalid_sql_add', $BLOCK_NAME), $THIS_PAGE_WITH_USER);
     	}
         redirect($THIS_PAGE_WITH_USER, get_string('edit_continue', $BLOCK_NAME), 0);
@@ -112,7 +112,7 @@
     	$transaction = $DB->start_delegated_transaction();
         if($attr_def->attribute == 'difficulty') {
             // (GS) Dirty workaround: Die kursspezifischen Kenntnisse werden PRO KURS in einer separaten Tabelle erfasst -> dafür ist eine gesonderte SQL-Anfrage notwendig
-            if(!$DB->delete_records('block_user_preferences_learner_knowledge', array('userid' => $user_id, 'courseid' => $course_id))){
+            if(!$DB->delete_records('ilms_learner_knowledge', array('userid' => $user_id, 'courseid' => $course_id))){
             	$transaction->rollback();
             	error(get_string('error_invalid_sql_set', $BLOCK_NAME), $THIS_PAGE_WITH_USER);
             } else {
@@ -123,7 +123,7 @@
             		$dataObject->value = $attr_value;
             		$dataObject->applience = "1.0";
             		$dataObject->timemodified = time();
-            		if(!$DB->insert_record('block_user_preferences_learner_knowledge', $dataObject)){
+            		if(!$DB->insert_record('ilms_learner_knowledge', $dataObject)){
             			$transaction->rollback();
             			error(get_string('error_invalid_sql_set', $BLOCK_NAME), $THIS_PAGE_WITH_USER);
             		}
@@ -131,7 +131,7 @@
             	$transaction->allow_commit();
             }
         } else {
-            if(!$DB->delete_records('block_user_preferences_learnermeta', array('userid' => $user_id, 'definitionid' => $attr_type))){
+            if(!$DB->delete_records('ilms_learnermeta', array('userid' => $user_id, 'definitionid' => $attr_type))){
             	$transaction->rollback();
             	error(get_string('error_invalid_sql_set', $BLOCK_NAME), $THIS_PAGE_WITH_USER);
             }else{
@@ -143,7 +143,7 @@
             		$dataObject->value = $attr_value;
             		$dataObject->applience = "1.0";
             		$dataObject->timemodified = time();
-            		if(!$DB->insert_record('block_user_preferences_learnermeta', $dataObject)){
+            		if(!$DB->insert_record('ilms_learnermeta', $dataObject)){
             			$transaction->rollback();
             			error(get_string('error_invalid_sql_set', $BLOCK_NAME), $THIS_PAGE_WITH_USER);
             		}
@@ -161,7 +161,7 @@
         if($attr_subtype != null){
         	$conditions['subtype'] = "'".addslashes($attr_subtype)."'";
         }
-        if(!$DB->delete_records('block_user_preferences_lernermeta', $conditions)){
+        if(!$DB->delete_records('ilms_lernermeta', $conditions)){
         	error(get_string('error_invalid_sql_delete', $BLOCK_NAME), $THIS_PAGE_WITH_USER);
         }
         redirect($THIS_PAGE_WITH_USER, get_string('edit_continue', $BLOCK_NAME), 0);
@@ -221,7 +221,7 @@
     
     // Formular zum Anzeigen/Ändern/Löschen der Eigenschaften
     echo '<fieldset class="block"><legend>'.get_string('edit_legend_preferences', $BLOCK_NAME)."</legend>\n";
-    $sql = "SELECT DISTINCT d.attributegroup FROM {block_user_preferences_learnermeta_definitions} d ORDER BY d.attributegroup";
+    $sql = "SELECT DISTINCT d.attributegroup FROM {ilms_learnermeta_definitions} d ORDER BY d.attributegroup";
     if($groups = $DB->get_records_sql($sql)) {
         echo " <table class=\"user_preferences\">\n";
         $formCounter = 0;
@@ -230,17 +230,17 @@
             $sql = "SELECT * \n". // Bug MDL-10787 in this SQL statement -> FIXED
                 "FROM \n".
                 "  (SELECT l.definitionid, l.subtype, SUM(l.appliance*l.value)/SUM(l.appliance) AS mean_value  \n".
-                "   FROM {block_user_preferences_learnermeta} l   \n".
+                "   FROM {ilms_learnermeta} l   \n".
                 "   WHERE userid = $user_id \n".
                 "   GROUP BY l.subtype, l.definitionid\n".
                 "   UNION ALL\n".
                 "   SELECT d2.id as definitionid, NULL as subtype, SUM(k.appliance*k.value)/SUM(k.appliance) AS mean_value\n".
-                "   FROM {block_user_preferences_learner_knowledge} k\n".
-                "   INNER JOIN {block_user_preferences_learnermeta_definitions} d2 ON d2.attribute = 'difficulty'\n".
+                "   FROM {ilms_learner_knowledge} k\n".
+                "   INNER JOIN {ilms_learnermeta_definitions} d2 ON d2.attribute = 'difficulty'\n".
                 "   WHERE userid = $USER->id AND courseid = $course_id\n".
                 "   GROUP BY d2.id\n".
                 "  ) l2 \n".
-                "  INNER JOIN {block_user_preferences_learnermeta_definitions} d ON l2.definitionid = d.id  \n".
+                "  INNER JOIN {ilms_learnermeta_definitions} d ON l2.definitionid = d.id  \n".
                 "WHERE d.attributegroup = '$g->attributegroup'  \n".
                 "ORDER BY d.attributegroup, d.attribute, l2.subtype";
 
@@ -296,7 +296,7 @@
     echo "</fieldset> \n";
 
     // Formular zum Hinzufügen neuer Eigenschaften
-    if($subtype_definitions = $DB->get_records_sql("SELECT * FROM {block_user_preferences_learnermeta_definitions} WHERE attributegroup IN ('aims', 'interests', 'knowledge') AND attribute <> 'difficulty'")) {
+    if($subtype_definitions = $DB->get_records_sql("SELECT * FROM {ilms_learnermeta_definitions} WHERE attributegroup IN ('aims', 'interests', 'knowledge') AND attribute <> 'difficulty'")) {
         echo '<form action="'.$THIS_PAGE_SIMPLE.'" method="post">';    
         //echo '<fieldset class="block"><legend>'.get_string('edit_legend_add', $BLOCK_NAME).' '.custom_helpbutton("help_add", get_string('edit_legend_add', $BLOCK_NAME)).'</legend>';
         echo '<fieldset class="block"><legend>'.get_string('edit_legend_add', $BLOCK_NAME).' '.$OUTPUT->help_icon("add", $BLOCK_NAME).'</legend>';

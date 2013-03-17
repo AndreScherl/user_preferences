@@ -107,7 +107,7 @@ function create_definitions($DB) {
           $default_definitions['experience']->attributegroup = 'general';
     }
     // Erstelle alle Attributdefinitionen, die noch nicht vorhanden sind
-    $sql = "SELECT * FROM {block_user_preferences_learnermeta_definitions}";
+    $sql = "SELECT * FROM {ilms_learnermeta_definitions}";
     if(!$definitions = $DB->get_records_sql($sql)) {
         $definitions = array();
     }
@@ -118,14 +118,14 @@ function create_definitions($DB) {
           		continue 2;
         	}
         }
-        $id = $DB->insert_record('block_user_preferences_learnermeta_definitions', $d);
+        $id = $DB->insert_record('ilms_learnermeta_definitions', $d);
         // DEBUG echo "<p></pre>"; var_dump($d); echo "</pre></p>";
     }
 }
 
 create_definitions($DB);
 echo "<h3>".get_string('title_attribute_definition', 'block_user_preferences')."</h3>";
-if($definitions = $DB->get_records_sql("SELECT * FROM {block_user_preferences_learnermeta_definitions}")) {
+if($definitions = $DB->get_records_sql("SELECT * FROM {ilms_learnermeta_definitions}")) {
     echo "<table border=\"1\">\n";
     echo "  <tr><th rowspan=\"2\">ID</th><th rowspan=\"2\">".get_string('title_attribute', $BLOCK_NAME)."</th><th rowspan=\"2\">".get_string('title_group', $BLOCK_NAME)."</th><th rowspan=\"2\">".get_string('title_type', $BLOCK_NAME)."</th><th colspan=\"10\">".get_string('title_values', $BLOCK_NAME)."</th></tr>\n";
     echo "  <tr><th>".get_string('title_level1', $BLOCK_NAME)."</th><th>".get_string('title_value', $BLOCK_NAME)."</th><th>".get_string('title_level2', $BLOCK_NAME)."</th><th>".get_string('title_value', $BLOCK_NAME)."</th><th>".get_string('title_level3', $BLOCK_NAME)."</th><th>".get_string('title_value', $BLOCK_NAME)."</th><th>".get_string('title_level4', $BLOCK_NAME)."</th><th>".get_string('title_value', $BLOCK_NAME)."</th><th>".get_string('title_level5', $BLOCK_NAME)."</th><th>".get_string('title_value', $BLOCK_NAME)."</th></tr>\n";

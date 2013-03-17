@@ -16,13 +16,13 @@
      * Vervollständigt eine Liste mit Metadaten, indem für fehlende Attributtypen ohne Subtyp
      * ein leerer Einrag hinzugefügt wird.
      * Hintergrund: Für diese Attributtypen sollte stets ein Eintrag angezeigt werden.
-     * @param   array   $meta           Referenz auf ein Array mit Metadaten aus der Tabelle block_user_preferences_learnermeta
+     * @param   array   $meta           Referenz auf ein Array mit Metadaten aus der Tabelle ilms_learnermeta
      * @param   String  $group          Bezeichnung der Attributgruppe, die vercollständigt werden soll oder null, falls alle Attribute vervollständigt werden sollen
-     * @global  array   $definitions    Array mit den Attribut-Definitionen aus der Tabelle block_user_preferences_learnermeta_definitions
+     * @global  array   $definitions    Array mit den Attribut-Definitionen aus der Tabelle ilms_learnermeta_definitions
      */
     function complete_metadata(&$meta, $group = null) {
         global $CFG, $user_id, $definitions, $DB;
-        $sql = "SELECT * FROM {block_user_preferences_learnermeta_definitions} ORDER BY attributegroup, attribute";
+        $sql = "SELECT * FROM {ilms_learnermeta_definitions} ORDER BY attributegroup, attribute";
         if(!$definitions && !$definitions = $DB->get_records_sql($sql)) {
             $definitions = array();
         }
@@ -52,14 +52,14 @@
     }
     
     /**
-     * Fügt zu den Metadateninformationen aus der Tabelle block_user_preferences_learnermeta das Tracking-Tag im Feld "tracking"
-     * aus der Tabelle block_user_preferences_learnermeta_definitions als Attribut hinzu.
-     * @param   array   $meta           Referenz auf ein Array mit Metadaten aus der Tabelle block_user_preferences_learnermeta
-     * @global  array   $definitions    Array mit den Attribut-Definitionen aus der Tabelle block_user_preferences_learnermeta_definitions
+     * Fügt zu den Metadateninformationen aus der Tabelle ilms_learnermeta das Tracking-Tag im Feld "tracking"
+     * aus der Tabelle ilms_learnermeta_definitions als Attribut hinzu.
+     * @param   array   $meta           Referenz auf ein Array mit Metadaten aus der Tabelle ilms_learnermeta
+     * @global  array   $definitions    Array mit den Attribut-Definitionen aus der Tabelle ilms_learnermeta_definitions
      */
     function add_tracking_tag(&$meta) {
         global $CFG, $user_id, $definitions, $DB;
-        if(!$definitions && !$definitions = $DB->get_records_sql("SELECT * FROM {block_user_preferences_learnermeta_definitions} ORDER BY attributegroup, attribute")) {
+        if(!$definitions && !$definitions = $DB->get_records_sql("SELECT * FROM {ilms_learnermeta_definitions} ORDER BY attributegroup, attribute")) {
             $definitions = array();
         }
         foreach($meta as $m) {
@@ -71,14 +71,14 @@
      * Formatiert den Wert einer Eigenschaft für die Ausgabe in Abhängigkeit des jeweiligen Attributtyps.
      * @param   number  $value          Zu formatierender Wert
      * @param   int     $definitionid   ID der zugrundeliegenden Attribut-Definition
-     * @global  array   $definitions    Array mit den Attribut-Definitionen aus der Tabelle block_user_preferences_learnermeta_definitions
+     * @global  array   $definitions    Array mit den Attribut-Definitionen aus der Tabelle ilms_learnermeta_definitions
      * @global  String  $BLOCK_NAME     Name der Sprach-Referenz-Datei
      * @global  object  $CFG
      * @return Eine formatierte String-Repräsentation des angegebenen Werts für die Ausgabe
      */
     function get_value($value, $definitionid) {
     	global $BLOCK_NAME, $CFG, $definitions, $DB;
-        if(!$definitions && !$definitions = $DB->get_records_sql("SELECT * FROM {block_user_preferences_learnermeta_definitions} ORDER BY attributegroup, attribute")) {
+        if(!$definitions && !$definitions = $DB->get_records_sql("SELECT * FROM {ilms_learnermeta_definitions} ORDER BY attributegroup, attribute")) {
             $definitions = array();
         }
         if($value == null || !array_key_exists($definitionid, $definitions)) {
@@ -103,14 +103,14 @@
      * @param   int     $definitionid   ID der zugrundeliegenden Attribut-Definition
      * @param   String  $fieldname      Formular-Name des Eingabefelds
      * @param   String  $onchange       Javascript, das beim Ändern des Werts aufgerufen werden soll
-     * @global  array   $definitions    Array mit den Attribut-Definitionen aus der Tabelle block_user_preferences_learnermeta_definitions
+     * @global  array   $definitions    Array mit den Attribut-Definitionen aus der Tabelle ilms_learnermeta_definitions
      * @global  String  $BLOCK_NAME     Name der Sprach-Referenz-Datei
      * @global  object  $CFG
      * @return String, welcher den HTML-Code enthält oder null, falls $definitionid keiner Attributdefinition entspricht
      */
     function input_field($value, $definitionid, $fieldname="value", $onchange="") {
         global $BLOCK_NAME, $CFG, $definitions, $DB;
-        if(!$definitions && !$definitions = $DB->get_records_sql("SELECT * FROM {block_user_preferences_learnermeta_definitions} ORDER BY attributegroup, attribute")) {
+        if(!$definitions && !$definitions = $DB->get_records_sql("SELECT * FROM {ilms_learnermeta_definitions} ORDER BY attributegroup, attribute")) {
             $definitions = array();
         }
         if(!array_key_exists($definitionid, $definitions)) {

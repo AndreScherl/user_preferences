@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="block/user_preferences/db" VERSION="2012082100" COMMENT="XMLDB file for iLMS user preferences block"
+<XMLDB PATH="block/user_preferences/db" VERSION="2011012511" COMMENT="XMLDB file for iLMS user preferences block"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
 	<TABLES>
-		<TABLE NAME="block_user_preferences_learnermeta_definitions" COMMENT="iLMS learner metadata: text value definitions" NEXT="block_user_preferences_learnermeta">
+		<TABLE NAME="ilms_learnermeta_definitions" COMMENT="iLMS learner metadata: text value definitions" NEXT="ilms_learnermeta">
 			<FIELDS>
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="attribute"/>
 				<FIELD NAME="attribute" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="value1"/>
@@ -25,7 +25,7 @@
 				<INDEX UNIQUE="false" NAME="attributegroup" FIELDS="attributegroup" PREVIOUS="attribute"/>
 			</INDEXES>
 		</TABLE>
-		<TABLE NAME="block_user_preferences_learnermeta" COMMENT="iLMS learner metadata" PREVIOUS="block_user_preferences_learnermeta_definitions" NEXT="block_user_preferences_learner_knowledge">
+		<TABLE NAME="ilms_learnermeta" COMMENT="iLMS learner metadata" PREVIOUS="ilms_learnermeta_definitions" NEXT="ilms_learner_knowledge">
 			<FIELDS>
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="userid"/>
 				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="definitionid"/>
@@ -38,10 +38,10 @@
 			<KEYS>
 				<KEY NAME="primary" FIELDS="id" TYPE="primary" NEXT="userid"/>
 				<KEY NAME="userid" FIELDS="userid" TYPE="foreign" REFTABLE="user" REFFIELDS="id" PREVIOUS="primary" NEXT="definitionid"/>
-				<KEY NAME="definitionid" FIELDS="definitionid" TYPE="foreign" REFTABLE="block_user_preferences_learnermeta_definitions" REFFIELDS="id" PREVIOUS="userid"/>
+				<KEY NAME="definitionid" FIELDS="definitionid" TYPE="foreign" REFTABLE="ilms_learnermeta_definitions" REFFIELDS="id" PREVIOUS="userid"/>
 			</KEYS>
 		</TABLE>
-		<TABLE NAME="block_user_preferences_learner_knowledge" COMMENT="iLMS learner knowledge (DIFFICULTY attribut)" PREVIOUS="block_user_preferences_learnermeta">
+		<TABLE NAME="ilms_learner_knowledge" COMMENT="iLMS learner knowledge (DIFFICULTY attribut)" PREVIOUS="ilms_learnermeta">
 			<FIELDS>
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="userid"/>
 				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="courseid"/>
