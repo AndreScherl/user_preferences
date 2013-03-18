@@ -65,9 +65,9 @@ function xmldb_block_user_preferences_upgrade($oldversion=0) {
     }
     
     if ($oldversion < 2013031700) {
-    	$dbman->rename_table("block_user_preferences_learnermeta_definitions", "ilms_learnermeta_definitions", $continue=true, $feedback=true);
-    	$dbman->rename_table("block_user_preferences_learnermeta", "ilms_learnermeta", $continue=true, $feedback=true);
-    	$dbman->rename_table("block_user_preferences_learner_knowledge", "ilms_learner_knowledge", $continue=true, $feedback=true);
+    	$dbman->rename_table("ilms_learnermeta_definitions", "ilms_learnermeta_definitions", $continue=true, $feedback=true);
+    	$dbman->rename_table("ilms_learnermeta", "ilms_learnermeta", $continue=true, $feedback=true);
+    	$dbman->rename_table("ilms_learner_knowledge", "ilms_learner_knowledge", $continue=true, $feedback=true);
     	
     	upgrade_block_savepoint(true, 2013031700, 'user_preferences');
     }
