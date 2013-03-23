@@ -27,7 +27,20 @@
 //   $<componenttype>_<component_name>_capabilities
 
 $capabilities = array(
+	
+	'block/user_preferences:addinstance' => array(
 
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'legacy' => array(
+            'guest' => CAP_PREVENT,
+            'student' => CAP_PREVENT,
+            'teacher' => CAP_PREVENT,
+            'editingteacher' => CAP_PREVENT,
+            'admin' => CAP_ALLOW
+        )
+    ),
+	
     /** Das Recht, im Block links die eigenen Nutzerpräferenzen anzusehen */
     'block/user_preferences:edit' => array(
 
